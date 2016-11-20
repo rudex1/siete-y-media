@@ -127,4 +127,5 @@ function validarDatos(){
         alert (msg);
         return false;
     }
+
 }

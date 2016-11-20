@@ -1,37 +1,13 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
-
-#include <conio.h>   // Función getch (no estándar: específica del compilador de Borland)
-
 
 /* Baraja de cartas */
 /* ---------------- */
 
-#define PALOS    4
-#define NUMEROS 10
-#define CARTAS  (NUMEROS*PALOS)
 
-typedef enum Palo {
-    Oros,
-    Copas,
-    Espadas,
-    Bastos
-} Palo;
-
-typedef struct Carta {
-    Palo palo;
-    int  numero;
-} Carta;
-
-typedef Carta Baraja[CARTAS];
 
 /* Inicializar la baraja */
 
-void inicializarBaraja (Baraja baraja)
-{
-    int i,j;
+function inicializarBaraja(){
+    var i,j;
 
     for (i=0; i<PALOS; i++) {
         for (j=0; j<NUMEROS; j++) {
@@ -81,10 +57,9 @@ void barajar (Baraja baraja)
 
 /* Muestra en pantalla el valor de una carta */
 
-void mostrarCarta (Carta carta)
-{
-    char palo[10];
-    char numero[10];
+function mostrarCarta(Carta carta){
+   var palo[10];
+    var numero[10];
 
     // Palo
 
@@ -147,9 +122,8 @@ void mostrarBaraja (Baraja baraja)
 
 /* Pregunta al usuario del tipo SÍ/NO */ 
 
-int preguntar (char *mensaje)
-{
-    char c;
+function preguntar(char *mensaje){
+   var c;
 
     do {
         printf("%s (s/n)\n",mensaje);
@@ -175,8 +149,7 @@ void mensaje (char *mensaje)
 
 /* Devuelve el valor de una carta en el juego */
 
-float puntos (Carta carta)
-{
+float puntos (Carta carta){
     if (carta.numero<7)
         return carta.numero + 1;
     else
@@ -212,81 +185,59 @@ float dar_carta (Baraja baraja, int *carta_actual, char *jugador)
 
 /* Partida */
 
-void juego (Baraja baraja)
-{
-    int   carta_actual;
-    float puntos_jugador, puntos_ordenador;  // Puntos
-    int   jugador_sigue, ordenador_sigue;    // ¿seguir jugando?
+function juego (Baraja baraja){
+    var carta_actual;
+    var puntos_jugador , puntos_ordenador;  // Puntos
+    var jugador_sigue, ordenador_sigue;    // ¿seguir jugando?
 
     carta_actual = 0;
-    puntos_jugador = 0;
-    puntos_ordenador = 0;
+    puntos_jugador = /^\d*(\.\d{1})?\d{0,1}$/;
+    puntos_ordenador = /^\d*(\.\d{1})?\d{0,1}$/;
 
     jugador_sigue = 1;
     ordenador_sigue = 1;
 
     do {
-
         // Carta para el jugador
-
         if (jugador_sigue) {
-
             // NOTA: Se podría ofrecer una recomendación llamando a
             //       pide_otra_carta(puntos_jugador,puntos_ordenador);
-
-
             if (preguntar("¿Quiere una carta?")) {
-
                 puntos_jugador += dar_carta(baraja, &carta_actual, "el jugador");
-
                 if (puntos_jugador>7.5) {
-                    mensaje("Te has pasado !!!");
+                    document.write("Te has pasado !!!");
                     jugador_sigue = 0;
                 }
-
             } else {
                 jugador_sigue = 0;
             }
-
         }
-
         // Carta para el ordenador
-
         if (ordenador_sigue) {
-
             // Estrategia del ordenador
             // NOTA: No vale mirar la baraja
-
             if ( pide_otra_carta(puntos_ordenador, puntos_jugador) ) {
-
                 puntos_ordenador += dar_carta(baraja, &carta_actual, "el ordenador");
-
                 if (puntos_ordenador>7.5) {
-                    mensaje("El ordenador se ha pasado");
+                    document.write("El ordenador se ha pasado");
                     ordenador_sigue = 0;
                 }
-
             } else {
-
-                mensaje("El ordenador se planta");
+                document.write("El ordenador se planta");
                 ordenador_sigue = 0;
             }
         }
-
-        printf("- Jugador: %.1f puntos\n", puntos_jugador);
-        printf("- Ordenador: %.1f puntos\n", puntos_ordenador);
+        document.write("- Jugador: %.1f puntos\n", puntos_jugador);
+        document.write("- Ordenador: %.1f puntos\n", puntos_ordenador);
 
     } while (jugador_sigue || ordenador_sigue);
 
     // Resultado de la partida
 
     if ( gana_jugador(puntos_jugador,puntos_ordenador) )
-        mensaje("\nEnhorabuena, ha ganado la partida !!!\n");
+        alert("\nEnhorabuena, ha ganado la partida !!!\n");
     else
-        mensaje("\nOtra vez será...\n");
-
-
-
+        alert("\nOtra vez será...\n");
 }
 
 
